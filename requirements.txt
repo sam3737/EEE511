@@ -1,0 +1,7 @@
+numpy
+black
+scipy
+matplotlib
+ipython
+ipykernel
+isort
