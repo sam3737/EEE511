@@ -9,17 +9,19 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	"forwardPorts": [8888],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt",
+	// local-setup.sh is gitignored: put personal, non-shared setup there.
+	"postCreateCommand": "pip3 install --user -r requirements.txt && { [ -f .devcontainer/local-setup.sh ] && bash .devcontainer/local-setup.sh || true; }",
 
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-python.black-formatter",
-				"ms-python.isort"
+				"ms-python.isort",
+				"ms-toolsai.jupyter"
 			]
 		}
 	},

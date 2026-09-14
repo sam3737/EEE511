@@ -5,3 +5,5 @@ matplotlib
 ipython
 ipykernel
 isort
+jupyterlab
+notebook
