@@ -13,7 +13,11 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// local-setup.sh is gitignored: put personal, non-shared setup there.
-	"postCreateCommand": "pip3 install --user -r requirements.txt && { [ -f .devcontainer/local-setup.sh ] && bash .devcontainer/local-setup.sh || true; }",
+	// The two commands run independently, so a failed pip install doesn't skip local setup.
+	"postCreateCommand": {
+		"pip": "pip3 install --user -r requirements.txt",
+		"local": "[ ! -f .devcontainer/local-setup.sh ] || bash .devcontainer/local-setup.sh"
+	},
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -24,7 +28,7 @@
 				"ms-toolsai.jupyter"
 			]
 		}
-	},
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

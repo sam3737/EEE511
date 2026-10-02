@@ -1,3 +1,5 @@
+# CPU-only torch: the container has no GPU, and the default wheel pulls ~3 GB of CUDA libraries.
+--extra-index-url https://download.pytorch.org/whl/cpu
 numpy
 black
 scipy
@@ -7,3 +9,6 @@ ipykernel
 isort
 jupyterlab
 notebook
+torch
+pandas
+openpyxl
