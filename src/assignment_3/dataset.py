@@ -32,10 +32,28 @@ class ShapeDataset(Dataset):
         img = self.generate_background()
         color = self.generate_color()
         side_length = self.rng.integers(24, 51)
-        top_left = self.rng.integers(0, 129 - side_length, size=2)
-        cv2.rectangle(
-            img, pt1=top_left, pt2=top_left + side_length - 1, color=color, thickness=-1
+        rot_angle = self.rng.uniform(0, np.pi / 2)
+        h = side_length / 2.0
+
+        # Local corners relative to center
+        local_corners = np.array([[-h, -h], [h, -h], [h, h], [-h, h]])
+
+        # Rotation matrix
+        cos_a, sin_a = np.cos(rot_angle), np.sin(rot_angle)
+        rot_mat = np.array([[cos_a, -sin_a], [sin_a, cos_a]])
+
+        # Rotate first: rotation can make the bounding box wider than the side.
+        box = np.round(local_corners @ rot_mat.T).astype(np.int32)
+
+        # Choose a translation that keeps every rasterized vertex inside the image.
+        # integers() excludes its upper bound, so coordinates stay in [0, 127].
+        image_size = np.array([img.shape[1], img.shape[0]], dtype=np.int32)
+        offset = self.rng.integers(
+            -box.min(axis=0), image_size - box.max(axis=0), size=2, dtype=np.int32
         )
+        box += offset
+
+        cv2.fillPoly(img, [box], color=color)
         return img
 
     def draw_circle(self):
